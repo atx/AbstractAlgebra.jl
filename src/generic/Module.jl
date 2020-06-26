@@ -158,7 +158,19 @@ end
 ###############################################################################
 
 function ==(m::AbstractAlgebra.FPModuleElem{T}, n::AbstractAlgebra.FPModuleElem{T}) where T <: RingElement
-   check_parent(m, n)
+   flag, P = iscompatible(m.parent, n.parent)
+   !flag && error("Modules not compatible")
+   # Map both vectors to the supermodule
+   M1 = m.parent
+   while M1 !== P
+      m = M1.map(m)
+      M1 = supermodule(M1)
+   end
+   N1 = n.parent
+   while N1 !== P
+      n = N1.map(n)
+      N1 = supermodule(N1)
+   end
    return m.v == n.v
 end
 

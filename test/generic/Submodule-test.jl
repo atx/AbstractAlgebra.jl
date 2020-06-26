@@ -153,3 +153,36 @@ end
       end
    end
 end
+
+@testset "Generic.Submodule.parent_equality..." begin
+   for R in [ZZ, QQ]
+      for iter = 1:40
+         M = rand_module(R, -10:10)
+         ngens = rand(1:5)
+         S = [rand(M, -10:10) for i in 1:ngens]
+         N, f = sub(M, S)
+
+         m = rand(N, -10:10)
+
+         @test m == f(m)
+      end
+   end
+end
+
+@testset "Generic.Submodule.parent_transitive_equality..." begin
+   for R in [ZZ, QQ]
+      for iter = 1:40
+         M = rand_module(R, -10:10)
+         ngens = rand(1:5)
+         S = [rand(M, -10:10) for i in 1:ngens]
+         N, f = sub(M, S)
+         ngens = rand(1:ngens)
+         S = [rand(N, -10:10) for i in 1:ngens]
+         W, g = sub(N, S)
+
+         m = rand(W, -10:10)
+
+         @test m == f(g(m))
+      end
+   end
+end
