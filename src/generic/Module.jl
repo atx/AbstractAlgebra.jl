@@ -12,6 +12,25 @@ export iscompatible, issubmodule, isisomorphic, rels
 #
 ###############################################################################
 
+function Base.hash(a::FreeModuleElem, h::UInt)
+   b = 0x7d4f4c66bdea0a75%UInt
+   return xor(hash(a.v, h), b)
+end
+
+function Base.hash(a::Submodule, h::UInt)
+   b = 0xb5b2bf9167eae0de%UInt
+   return xor(xor(hash(a.m, h), hash(dim(a))), b)
+end
+
+function Base.hash(a::SubmoduleElem, h::UInt)
+   return hash(a.parent.map(a), h)
+end
+
+function Base.hash(a::QuotientModuleElem, h::UInt)
+   b = 0xdb91ebb5bba4678d%UInt
+   return xor(hash(a.v, h), b)
+end
+
 @doc Markdown.doc"""
     zero(M::AbstractAlgebra.FPModule{T}) where T <: RingElement
 > Return the zero element of the module $M$.
